@@ -1,0 +1,65 @@
+def is_safe(board, row, col, n):
+    # Check the row on the left side
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+
+    # Check the upper diagonal on the left side
+    i = row
+    j = col
+    while i >= 0 and j >= 0:
+        if board[i][j] == 1:
+            return False
+        i -= 1
+        j -= 1
+
+    # Check the lower diagonal on the left side
+    i = row
+    j = col
+    while i < n and j >= 0:
+        if board[i][j] == 1:
+            return False
+        i += 1
+        j -= 1
+
+    return True
+
+
+def solve_n_queens(n):
+    board = [[0] * n for i in range(n)]
+    solutions = []
+
+    def solve_queens_util(col):
+        if col == n:
+            # All queens have been placed successfully
+            solutions.append([row[:] for row in board])
+            return
+
+        for row in range(n):
+            if is_safe(board, row, col, n):
+                # Place the queen and recursively solve for the next column
+                board[row][col] = 1
+                solve_queens_util(col + 1)
+                # Backtrack and remove the queen to explore other possibilities
+                board[row][col] = 0
+
+    solve_queens_util(0)
+
+    return solutions
+
+
+# Get input from the user
+n = int(input("Enter the value of N: "))
+
+# Solve the N-Queens problem
+solutions = solve_n_queens(n)
+
+# Display the solutions
+print(f"Number of solutions for N = {n}: {len(solutions)}")
+for i, solution in enumerate(solutions):   #to keep a track of the index
+    print(f"\nSolution {i+1}:")
+    for row in solution:
+        print(" ".join(str(cell) for cell in row))
+
+
+
