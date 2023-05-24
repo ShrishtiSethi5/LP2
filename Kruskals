@@ -1,0 +1,82 @@
+#include<iostream>
+#include<algorithm>
+#include<utility>
+#include<vector>
+using namespace std;
+
+#define INF 99999
+#define edge pair<int,int>
+class Graph
+{
+    public:
+    vector<pair<int,edge>> G;
+    vector<pair<int,edge>> T;
+    int * parent;
+    
+    Graph(int v)
+    {
+        parent=new int(v);
+        for(int i=0;i<v;i++)
+        {
+        parent[i]=i;
+        }
+    }
+    
+    void addedge(int u,int v,int w)
+    {
+        G.push_back(make_pair(w,edge(u,v)));
+    }
+    
+    int find_parent(int i)
+    {
+        if(i==parent[i])
+        return i;
+        else
+        return find_parent(parent[i]);
+    }
+
+    void kruskal()
+    {
+        int uRep,vRep;
+        sort(G.begin(),G.end());
+        for(int i=0;i<G.size();i++)
+        {
+            uRep=find_parent(G[i].second.first);
+            vRep=find_parent(G[i].second.second);
+            if(uRep!=vRep)
+            {
+                T.push_back(G[i]);
+                parent[uRep]=parent[vRep];
+            }
+        }
+        cout<<"\nEdge : Weight ";
+        int cost=0;
+        for(int i=0;i<T.size();i++)
+        {
+            cout<<"\n";
+            cout<<T[i].second.first<<" - "<<T[i].second.second<<" : "<<T[i].first;
+            cost+=T[i].first;
+        }
+    
+        cout<<"\nCost of MST is: "<<cost;
+    }
+};
+
+int main()
+{
+    int a,b,c,v,e;
+    cout<<"Enter the vertices: ";
+    cin>>v;
+    cout<<"Enter the edges: ";
+    cin>>e;
+    Graph g(v);
+    cout<<"\nEnter the vertices and edge value one by one: \n";
+    for(int i=0;i<e;i++)
+    {
+        cin>>a>>b>>c;
+        g.addedge(a,b,c);
+    }
+    g.kruskal();
+    return 0;
+    
+}
