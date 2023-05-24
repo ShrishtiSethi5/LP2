@@ -1,0 +1,100 @@
+#include<iostream>
+#include<queue>
+#include<stack>
+#include<vector>
+using namespace std;
+
+void BFS(vector<vector<int>> &adj, queue<int> &q, vector<bool> &discovered)
+{
+  
+  if(!q.empty())
+  {
+    int t=q.front();
+    q.pop();
+    cout<<t<<" ";
+    for(int n :adj[t])
+    {
+        if(!discovered[t])
+        {
+          discovered[t]=true;
+          q.push(t);
+        }
+    }
+    BFS(adj,q,discovered);
+  }
+}
+
+
+void DFS(vector<vector<int>> &adj,stack<int> &s,vector<bool> &visited)
+{
+    if(!s.empty())
+    {
+        int t=s.top();
+        s.pop();
+        cout<<t<<" ";
+        
+        for(int n: adj[t])
+        {
+            if(!visited[n])
+            {
+                visited[n]=true;
+                s.push(n);
+            }
+        }
+        DFS(adj,s,visited);
+    }
+}
+
+int main()
+{
+    int v,e,a,b,choice;
+    cout<<"Enter the number of vertices: ";
+    cin>>v;
+    cout<<"Enter the number of edges: ";
+    cin>>e;
+    
+    vector<vector<int>> adj(v);
+    // adj.resize(v);
+    cout<<"\nEnter the edges one by one: ";
+    for(int i=0;i<e;i++)
+    {
+        cin>>a>>b;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+    
+    cout<<"\nEnter 1 for BFS and 2 for DFS: ";
+    cin>>choice;
+    if(choice==1)
+    {
+        queue<int> q;
+        vector<bool> discovered(v,false);
+        for(int i=0;i<v;i++)
+        {
+            if(!discovered[i])
+            {
+                discovered[i]=true;
+                q.push(i);
+                BFS(adj,q,discovered);
+            }
+        }
+    }
+    else if(choice==2)
+    {
+        stack<int> s;
+        vector<bool> visited(v,false);
+        for(int i=0;i<v;i++)
+        {
+            if(!visited[i])
+            {
+                visited[i]=true;
+                s.push(i);
+                DFS(adj,s,visited);
+            }
+        }
+    }
+    else
+    cout<<"Invalid Choice!!!";
+    
+    return 0;
+}
